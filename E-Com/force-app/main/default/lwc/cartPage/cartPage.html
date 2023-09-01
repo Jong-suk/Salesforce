@@ -1,0 +1,24 @@
+<template>
+    <lightning-card title="Cart">
+        <div class="top-left">
+            <lightning-button label="X" onclick={handleClose} variant="neutral"></lightning-button>
+        </div>
+        <template if:true={cartItems.length}>
+            <lightning-datatable
+                key-field="Id"
+                data={cartItems}
+                columns={tableColumns}
+                hide-checkbox-column
+            ></lightning-datatable>
+            <div class="total-price">
+                <h3>Total Price: {totalPrice}</h3>
+            </div>
+            <div class="checkout-button">
+                <lightning-button label="Checkout" variant="brand" onclick={handleCheckout}></lightning-button>
+            </div>
+        </template>
+        <template if:false={cartItems.length}>
+            <div class="empty-cart">Your cart is empty.</div>
+        </template>
+    </lightning-card>
+</template>

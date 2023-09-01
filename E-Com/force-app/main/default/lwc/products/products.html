@@ -1,0 +1,130 @@
+<template>
+  <div class="container">
+    <div class="top-left">
+      <template if:true={isLoggedIn}>
+        <div class="profile-dropdown">
+          <div class="profile-toggle" onclick={toggleProfileDropdown}>
+            <lightning-icon
+              icon-name="standard:user"
+              alternative-text="Profile"
+              size="medium"
+              class="custom-icon"
+            ></lightning-icon>
+          </div>
+          <template if:true={isProfileDropdownOpen}>
+            <div class="profile-menu">
+              <div class="username">{username}</div>
+              <lightning-button-icon
+                icon-name="utility:cart"
+                alternative-text="Cart"
+                title="Cart"
+                onclick={openCartPage}
+                class="custom-button-icon"
+              >
+                <span class="cart-item-count">{cartItemCount}</span>
+              </lightning-button-icon>
+              <lightning-button-icon
+                icon-name="standard:orders"
+                alternative-text="Orders"
+                title="Orders"
+                onclick={openOrderPage}
+                class="custom-button-icon"
+              ></lightning-button-icon>
+              <lightning-button-icon
+                icon-name="utility:logout"
+                alternative-text="Logout"
+                title="Logout"
+                onclick={toggleRegistrationForm}
+                class="custom-button-icon"
+              ></lightning-button-icon>
+            </div>
+          </template>
+        </div>
+      </template>
+      <template if:false={isLoggedIn}>
+        <lightning-button
+          label="Login"
+          variant="brand"
+          title="Login"
+          onclick={toggleRegistrationForm}
+        ></lightning-button>
+      </template>
+    </div>
+    <div class="filter-bar">
+      <div class="filter-options">
+        <lightning-combobox value={categoryFilter} options={categoryOptions} onchange={handleCategoryFilter}></lightning-combobox>
+      </div>
+      <div class="search-bar">
+        <lightning-input type="search" value={searchTerm} onchange={handleSearch}></lightning-input>
+      </div>
+    </div>
+    
+    <div class="header">
+      <h1>Products</h1>
+    </div>
+
+    <div class="slds-grid slds-gutters slds-wrap justify-center">
+      <template for:each={filteredProducts} for:item="product">
+        <div class="card" key={product.Id}>
+          <img class="card-image" src={product.Image__c} alt={product.Name} />
+          <div class="card-text">
+              <h2>{product.Name}</h2>
+              <p>Category: {product.Family}</p>
+              <p>Quantity Available: {product.Quantity__c}</p>
+              <p>Price: ₹{product.Price__c}</p>
+              <br>
+              <lightning-button class="my-button" variant="brand" label="Add to Cart" onclick={handleAddToCart} data-product-id={product.Id} disabled={quantityChecker}></lightning-button>
+          </div>
+        </div>
+      </template>
+    </div>
+
+    <!-- Registration form --> 
+    <div class={registrationFormClass}>
+      <c-sign-in-login onregistrationcomplete={handleRegistrationComplete} onlogincomplete = {handleLoginComplete} onclose={handleClose}></c-sign-in-login>
+    </div>
+    <!-- Email Verification -->
+    <template if:true={showEmailVerificationPage}>
+      <div class="email-verify-overlay">
+        <c-email-Verify lead-id={leadId} email={email} onemailverified={handleEmailVerificationComplete} onclose={handleClose}></c-email-Verify>
+      </div>
+    </template>
+    <!-- Cart page overlay -->
+    <template if:true={showCartPage}>
+      <div class="cart-page-overlay">
+        <c-cart-Page lead-id={leadId} opportunity-record-id={opportunityRecordId} e-user-id={eUserId} onclose={handleClose} onordercreated={handleOrderButton} ></c-cart-Page>
+      </div>
+    </template>
+    <!-- Order page overlay -->
+    <template if:true={showOrderPage}>
+      <div class="order-viewer-overlay">
+        <c-order-Viewer order-id={orderId} e-user-id={eUserId} onclose={handleClose}></c-order-Viewer>
+      </div>
+    </template>
+    <!-- Pagination -->
+    <div class="pagination">
+      <div class="pagination-buttons">
+        <div class="Previous">
+          <lightning-button
+            label="Previous"
+            variant="brand"
+            onclick={handlePreviousPage}
+            disabled={isPreviousDisabled}
+          ></lightning-button>
+        </div>
+        <div class="Next">
+          <lightning-button
+            label="Next"
+            variant="brand"
+            onclick={handleNextPage}
+            disabled={isNextDisabled}
+          ></lightning-button>
+        </div>
+      </div>
+      <div class="pagination-footer">
+        </br>
+        <p>Page {currentPage} of {totalPages}</p>
+      </div> 
+    </div>
+  </div>
+</template>

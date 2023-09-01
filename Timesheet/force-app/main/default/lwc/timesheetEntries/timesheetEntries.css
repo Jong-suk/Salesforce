@@ -1,0 +1,97 @@
+.profile-container {
+    display: flex;
+    align-items: center;
+}
+
+.large-avatar {
+    width: 96px;
+    height: 96px;
+}
+
+.large-avatar img {
+  width: 96px !important;
+  height: 96px !important;
+}
+
+.username {
+    margin-left: 8px;
+    font-size: 24px;
+    font-weight: bold;
+}
+
+.para {
+    margin-right: 8px;
+}
+
+.button {
+    margin-left: 8px;
+    margin-top: 18px;
+}
+
+.buttonReport {
+    margin-left: 70px;
+    margin-top: 18px;
+}
+
+.custom-datatable th {
+    background-color: white;
+    border: 1px solid #d8dde6;
+    text-align: center;
+}
+
+.custom-datatable td {
+    border: 1px solid #d8dde6;
+    text-align: center;
+}
+
+.datatable-tooltip {
+  position: relative;
+}
+
+.datatable-tooltip::after {
+  content: attr(data-tooltip);
+  position: absolute;
+  top: -24px;
+  left: 0;
+  background-color: #333;
+  color: #fff;
+  padding: 4px;
+  border-radius: 4px;
+  white-space: nowrap;
+  font-size: 12px;
+  opacity: 0;
+  transition: opacity 0.2s ease-in-out;
+}
+
+.datatable-tooltip:hover::after {
+  opacity: 1;
+}
+
+.chart-container {
+  margin-top: 20px;
+  padding: 0;
+}
+
+.bottom {
+  display: flex;
+  justify-content: space-between;
+}
+
+.button-container {
+  margin: 0 10px;
+}
+
+.dropdown-container {
+  position: relative;
+}
+
+.dropdown-menu {
+  position: relative;
+  top: 100%;
+  right: 0;
+  z-index: 1;
+}
+
+.dropdown-menu > lightning-button {
+  display: block;
+}

@@ -1,0 +1,175 @@
+<template>
+    <lightning-card title="Timesheet Entries" icon-name="standard:timesheet">
+        <div class="slds-p-around_medium">
+            <div class="profile-container">
+                <lightning-avatar 
+                    variant="circle" 
+                    class="large-avatar" 
+                    src="https://www.iconbolt.com/iconsets/ionicons-outline/person-circle.svg" 
+                    fallback-icon-name="standard:avatar">
+                </lightning-avatar>
+                <p class="username">{selectedUserName}</p>
+            </div>
+            <hr>
+            <div class="slds-grid slds-wrap">
+                <div class="slds-col slds-size_1-of-4">
+                    <div class="profile-container">
+                        <p class="para"><strong>Role:</strong></p>
+                        <lightning-combobox
+                            class="slds-inline-flex slds-align-items-center"
+                            options={userOptions}
+                            value={selectedUser}
+                            onchange={handleUserChange}
+                            disabled>
+                        </lightning-combobox>
+                    </div>
+                </div>
+                <div class="slds-col slds-size_1-of-4">
+                    <div class="profile-container">
+                        <p class="para"><strong>Week: </strong></p>
+                        <lightning-input type="week"
+                            class="slds-inline-flex slds-align-items-center"
+                            value={selectedWeek}
+                            onchange={handleWeekChange}>
+                        </lightning-input>
+                        <lightning-button label="Go" variant="brand" class="button" onclick={handleSearchClick}></lightning-button>
+                    </div>
+                </div>
+                <div class="slds-col slds-size_2-of-4">
+                    <div class="profile-container">
+                        <lightning-button
+                            label="Apply Leave"
+                            class="button"
+                            variant="brand"
+                            onclick={handleLeaveEntryClick}
+                        ></lightning-button>
+                        <lightning-button
+                            label="Report"
+                            class="buttonReport"
+                            variant="brand"
+                            onclick={handleReportClick}
+                        ></lightning-button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <template if:true={reportChartVisible}>
+            <div class="chart-container">
+                <iframe src={chartUrl} width="100%" height="400px" frameborder="0"></iframe>
+            </div>
+        </template>
+
+        <template if:true={timesheetEntries}>
+            <div class="slds-p-around_medium">
+                <lightning-datatable
+                    key-field="Id"
+                    data={timesheetEntries}
+                    columns={columns}
+                    hide-row-number-column="true"
+                    hide-checkbox-column="true"
+                    onsave={handleSaveClick}
+                    draft-values={draftValues}
+                    class="slds-table slds-table_cell-buffer slds-table_bordered slds-table_col-bordered"
+                ></lightning-datatable>
+                <br>
+                <lightning-button
+                    label="Add"
+                    icon-name="utility:add"
+                    variant="brand"
+                    onclick={handleAddEntryClick}
+                ></lightning-button>
+            </div>
+        </template>
+
+        <template if:true={showAddEntryModal}>
+            <div role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true"
+                class="slds-modal slds-fade-in-open slds-modal_large">
+                <div class="slds-modal__container">
+                    <header class="slds-modal__header">
+                        <h2 id="modal-heading-01" class="slds-text-heading_medium slds-hyphenate">Create Timesheet Entry</h2>
+                        <button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse"
+                            title="Close" onclick={handleModalClose}>
+                            <lightning-icon icon-name="utility:close" alternative-text="Close"></lightning-icon>
+                            <span class="slds-assistive-text">Close</span>
+                        </button>
+                    </header>
+                    <div class="slds-modal__content slds-p-around_medium">
+                        <div class="slds-form">
+                          <lightning-combobox label="Project Name" value={selectedProjectId} options={projectOptions} onchange={handleProjectChange}></lightning-combobox>
+                          <lightning-combobox label="Task Name" value={selectedTaskId} options={taskOptions} onchange={handleTaskChange}></lightning-combobox>
+                          <br>
+                          <lightning-button label="Create Entry" variant="brand" onclick={handleCreateEntry}></lightning-button>
+                        </div>
+                    </div>                      
+                </div>
+            </div>
+            <div class="slds-backdrop slds-backdrop_open"></div>
+        </template>
+
+        <template if:true={showLeaveEntryModal}>
+            <div role="dialog" tabindex="-1" aria-labelledby="modal-heading-02" aria-modal="true"
+                class="slds-modal slds-fade-in-open slds-modal_large">
+                <div class="slds-modal__container">
+                    <header class="slds-modal__header">
+                        <h2 id="modal-heading-02" class="slds-text-heading_medium slds-hyphenate">Leave Request</h2>
+                        <button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse"
+                            title="Close" onclick={handleModalClose}>
+                            <lightning-icon icon-name="utility:close" alternative-text="Close"></lightning-icon>
+                            <span class="slds-assistive-text">Close</span>
+                        </button>
+                    </header>
+                    <div class="slds-modal__content slds-p-around_medium">
+                        <div class="slds-form">
+                            <lightning-combobox options={userOptions} value={selectedUser} onchange={handleUserChange}></lightning-combobox>
+                            <lightning-combobox label="Reason" options={leaveReasonOptions} value={leaveReason} onchange={handleLeaveReasonChange}></lightning-combobox>
+                            <lightning-input label="Start Date" type="date" value={leaveStartDate} onchange={handleLeaveStartDateChange}></lightning-input>
+                            <lightning-input label="End Date" type="date" value={leaveEndDate} onchange={handleLeaveEndDateChange}></lightning-input>
+                            <br>
+                            <lightning-button label="Apply Leave" variant="brand" onclick={handleCreateLeave}></lightning-button>
+                        </div>
+                    </div>                 
+                </div>
+            </div>
+            <div class="slds-backdrop slds-backdrop_open"></div>
+        </template>
+
+        <div class="bottom">
+            <div class="button-container">
+                <lightning-button 
+                    label="Save and Submit" 
+                    variant="brand"              
+                    onclick={submitTimesheet}
+                ></lightning-button>
+            </div>
+            <div class="button-container">
+                <div class="dropdown-container">
+                    <lightning-button
+                        label="Download"
+                        icon-name="utility:down"
+                        alternative-text="Download Options"
+                        variant="bare"
+                        title="Download Options"
+                        onclick={toggleDropdown}
+                    ></lightning-button>
+                    <div class="dropdown-menu" if:true={isDropdownOpen}>
+                        <lightning-button 
+                            icon-name="utility:download" 
+                            label="Download as CSV" 
+                            title="Download CSV File"
+                            onclick={downloadCSVFile} 
+                            variant="brand"
+                        ></lightning-button>
+                        <lightning-button 
+                            icon-name="utility:download" 
+                            label="Download as PDF" 
+                            title="Download PDF File"
+                            onclick={downloadPDFFile} 
+                            variant="brand"
+                        ></lightning-button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </lightning-card>
+</template>
