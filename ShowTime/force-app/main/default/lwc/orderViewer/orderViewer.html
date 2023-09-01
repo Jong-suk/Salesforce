@@ -1,0 +1,17 @@
+<template>
+    <lightning-card title="Order Details" icon-name="standard:orders">
+        <div class="top-left">
+            <lightning-button label="X" onclick={handleClose} variant="neutral"></lightning-button>
+        </div>
+        <div class="slds-m-around_medium">
+            <template if:true={selectedOrderId}>
+                <!-- Show order details -->
+                <c-order-details order_id={selectedOrderId} onclose={handleCloseDetails}></c-order-details>
+            </template>
+            <template if:false={selectedOrderId}>
+                <!-- Show order table -->
+                <c-order-table e-user-id={eUserId} onorderselected={handleOrderSelected}></c-order-table>
+            </template>
+        </div>
+    </lightning-card>
+</template>

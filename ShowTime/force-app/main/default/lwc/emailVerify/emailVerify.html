@@ -1,0 +1,14 @@
+<template>
+    <div class="container">
+        <div class="top-right">
+            <lightning-button label="X" onclick={handleClose} variant="neutral"></lightning-button>
+        </div>
+        <lightning-card title="Email Verification">
+            <div>
+                <lightning-input label="Email" type="email" value={email} onchange={handleEmailChange}></lightning-input>
+                <lightning-input label="Verification Code" type="number" value={verificationCode} onchange={handleVerificationCodeChange}></lightning-input>
+                <lightning-button label="Verify Email" variant="brand" onclick={handleVerifyEmail}></lightning-button>
+            </div>
+        </lightning-card>
+    </div>
+</template>

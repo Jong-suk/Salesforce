@@ -1,0 +1,17 @@
+<template>
+    <template if:true={orders}>
+        <lightning-card title="Orders" icon-name="standard:orders">
+            <div class="slds-m-around_medium">
+                <lightning-datatable
+                    key-field="Id"
+                    data={orders}
+                    columns={columns}
+                    onrowaction={handleRowAction}
+                ></lightning-datatable>
+            </div>
+        </lightning-card>
+    </template>
+    <template if:false={orders}>
+        <p>No orders found for the user.</p>
+    </template>
+</template>

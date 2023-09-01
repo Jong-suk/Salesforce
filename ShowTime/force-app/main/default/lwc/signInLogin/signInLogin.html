@@ -1,0 +1,73 @@
+<template>
+  <div class="container">
+    <div class="top-right">
+      <lightning-button label="X" onclick={handleClose} variant="neutral"></lightning-button>
+    </div>
+    <h2>Welcome</h2>
+    <p>Please choose an option:</p>
+    <div class="form-actions">
+      <button class={isLoginActive} onclick={handleLoginOption} type="button">Login</button>
+      <button class={isSignupActive} onclick={handleSignUpOption} type="button">Sign Up</button>
+    </div>
+    <hr>
+    <template if:true={showLogin}>
+      <h1>Login</h1>
+      <br>
+      <div class="form-group">
+        <label for="loginUsername">Username</label>
+        <input type="text" id="loginUsername" value={savedUsername} onchange={handleSavedUsernameChange} />
+      </div>
+      <div class="form-group">
+        <label for="loginPassword">Password</label>
+        <input type="password" id="loginPassword" value={savedPassword} onchange={handleSavedPasswordChange} />
+      </div>
+      <div class="form-actions">
+        <button onclick={handleLogin}>Login</button>
+      </div>
+    </template>
+    <template if:true={showSignUp}>
+      <div class="signup">
+        <div class="signup-detail">
+          <h1>Sign Up</h1>
+          <br>
+          <div class="form-group">
+            <label for="signupUsername">Username</label>
+            <input type="text" id="signupUsername" value={newUsername} onchange={handleNewUsernameChange} required />
+          </div>
+          <div class="form-group">
+            <label for="signupPassword">Password</label>
+            <input type="password" id="signupPassword" required value={newPassword} onchange={handleNewPasswordChange} />
+          </div>
+        </div>
+        <div class="vertical-line"></div>
+        <div class="contact-details">
+          <h1>Contact Details</h1>
+          <br>
+          <div class="form-group">
+            <label for="firstName">First Name</label>
+            <input type="text" id="firstName" required value={firstName} onchange={handleFirstNameChange} />
+          </div>
+          <div class="form-group">
+            <label for="lastName">Last Name</label>
+            <input type="text" id="lastName" required value={lastName} onchange={handleLastNameChange} />
+          </div>
+          <div class="form-group">
+            <label for="">Company</label>
+            <input type="text" id="company" required value={company} onchange={handleCompanyChange} />
+          </div>
+          <div class="form-group">
+            <label for="">Email</label>
+            <input type="email" id="email" required value={email} onchange={handleEmailChange} />
+          </div>
+          <div class="form-group">
+            <label for="">Phone</label>
+            <input type="tel" id="phone" required value={phone} onchange={handlePhoneChange} />
+          </div>
+        </div>
+      </div>
+      <div class="form-actions">
+        <button onclick={handleSignUp}>Sign Up</button>
+      </div>
+    </template>
+  </div>
+</template>
